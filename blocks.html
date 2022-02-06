@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>blocks</title>
+  <style>
+    body{
+      margin: 0;
+    }
+    .blocks{
+      width: 20%;
+      height: 100%;
+      border: 3px solid;
+    }
+    .blocks:hover{
+      background-color: cyan;
+    }
+    table{
+      width: 100vw;
+      height: 100vh;
+      border-spacing: 0;
+    }
+    tr{
+      height: 25vh;
+    }
+    .active{
+      border: 10px solid red;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td class="blocks active">0</td>
+      <td class="blocks">1</td>
+      <td class="blocks">2</td>
+      <td class="blocks">3</td>
+      <td class="blocks">4</td>
+    </tr>
+    <tr>
+      <td class="blocks">5</td>
+      <td class="blocks">6</td>
+      <td class="blocks">7</td>
+      <td class="blocks">8</td>
+      <td class="blocks">9</td>
+    </tr>
+    <tr>
+      <td class="blocks">10</td>
+      <td class="blocks">11</td>
+      <td class="blocks">12</td>
+      <td class="blocks">13</td>
+      <td class="blocks">14</td>
+    </tr>
+    <tr>
+      <td class="blocks">15</td>
+      <td class="blocks">16</td>
+      <td class="blocks">17</td>
+      <td class="blocks">18</td>
+      <td class="blocks">19</td>
+    </tr>
+    <!-- <tr>
+      <td class="blocks">20</td>
+      <td class="blocks">21</td>
+      <td class="blocks">22</td>
+      <td class="blocks">23</td>
+      <td class="blocks">24</td>
+    </tr> -->
+  </table>
+  <script>
+    const blocks = document.getElementsByClassName("blocks");
+    for (const block of blocks) {
+      let blockEvent;
+      block.onmouseover = () => {
+        if (block.classList.contains("active")) blockEvent = setTimeout(() => changeBlock(block), 1000);
+      };
+      block.onmouseout = () => {
+        if (block.classList.contains("active")) clearTimeout(blockEvent);
+      };
+    }
+    const changeBlock = block => {
+      const current = parseInt(block.innerHTML);
+      block.classList.remove("active");
+      const next = Math.floor(Math.random() * (blocks.length - 1));
+      blocks[next >= current ? next + 1 : next].classList.add("active");
+    };
+  </script>
+</body>
+</html>

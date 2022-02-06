@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Camera Test</title>
+    <script src="enchant.js"></script>
+    <style>
+      body {
+          margin: 0;
+          padding: 0;
+      }
+      #camera {
+        position: absolute; 
+        top: 0;
+        width: 100%;
+        background: #000; 
+        z-index: 0;
+        transform: scaleX(-1);
+      }
+      #camera:before {
+        content:"";
+        display: block;
+        padding-top: 75%; /* 高さを幅の75%に固定 */
+      }
+      #enchant-stage {
+        position: absolute;
+        top: 0px;
+        z-index: 1;
+      }
+      #picture, a{
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <form action="http://localhost:8080/calib_result/result.py" method="post" name="blockform">
+      <input type="hidden" name="pic">
+      <video id="camera"></video>
+      <canvas id="picture"></canvas>
+    </form>
+    <script>
+      enchant();
+      window.onload = () => {
+        //カメラサイズ変更したくなったらここ（ディスプレイサイズは変更しなくていい）
+        const CAMERA_X = 640;
+        const CAMERA_Y = 480;
+        const DISPLAY_X = 1920;
+        const DISPLAY_Y = 1080;
+
+        const video  = document.getElementById("camera");
+        const canvas = document.getElementById("picture");
+        
+        // video.width = CAMERA_X;
+        // video.height = CAMERA_Y;
+        canvas.width = CAMERA_X;
+        canvas.height = CAMERA_Y;
+
+        const constraints = {
+          audio: false,
+          video: {
+            width: CAMERA_X,
+            height: CAMERA_Y,
+            facingMode: "user"
+          }
+        };
+
+        //videoをカメラと連動
+        navigator.mediaDevices.getUserMedia(constraints)
+        .then( (stream) => {
+          video.srcObject = stream;
+          video.onloadedmetadata = (e) => {
+            video.play();
+          };
+        })
+        .catch((err) => {
+          console.log(err.name + ": " + err.message);
+        });
+
+        var core = new Core(DISPLAY_X, DISPLAY_Y);
+        core.fps = 24;
+        core.keybind(13, "a"); //Enterキーをaボタンとして登録
+        core.preload("facemark.png");
+
+        //中央上合わせ
+        var scl = Math.min(window.innerWidth / core.width, window.innerHeight / core.height);
+        core.scale = scl;
+        var wdh = core.width * core.scale;
+        var left = (window.innerWidth - wdh) / 2;
+        var enchantStage = document.getElementById('enchant-stage');
+        enchantStage.style.left = left + "px";
+        video.style.height = core.height * core.scale + "px";
+        
+        var aButtonFlag = true;
+        core.onload = function () {
+          core.rootScene.backgroundColor = "transparent";
+          const mask = new Sprite(core.width, core.height);
+          mask.x = 0;
+          mask.y = 0;
+          mask.image = core.assets["facemark.png"];
+          core.rootScene.addChild(mask);
+          core.addEventListener(Event.ENTER_FRAME, function(){
+            if (core.input.a) { //aボタン(Enterキー)が押されたときの処理
+              if (aButtonFlag) {
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const base64 = canvas.toDataURL("image/jpeg");
+                document.blockform.pic.value = base64;
+                document.blockform.submit();
+                aButtonFlag = false;
+              }
+            }
+            else{
+              aButtonFlag = true;
+            }
+          });
+        }
+        core.start();
+      };
+    </script>
+  </body>
+</html>
