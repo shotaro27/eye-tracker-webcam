@@ -78,7 +78,7 @@
 
 ### キャリブレーションを行う――calibration/calib.py
 1. calib.pyを実行
-2. [localhost:8080](https://localhost:8080/)を開く
+2. [localhost:8080](http://localhost:8080/)を開く
 3. ブラウザを全画面表示にして再読み込み
 4. カメラを許可
 5. 目の位置を四角形に合わせて、鼻筋を中央の線に合わせる
