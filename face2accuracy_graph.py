@@ -85,14 +85,17 @@ for t, x in enumerate(x1):
 
 print(testy1)
 
+
 plt.plot(photocount, average_x)
-plt.xlabel("学習データ数（枚）", fontname="MS Gothic")
-plt.ylabel("誤差(%)", fontname="MS Gothic")
-plt.title("x座標", fontname="MS Gothic")
+plt.xlabel("学習データ数（枚）", fontname="MS Gothic", fontsize="xx-large")
+plt.ylabel("誤差(%)", fontname="MS Gothic", fontsize="xx-large")
+plt.title("x座標", fontname="MS Gothic", fontsize="xx-large")
+plt.tick_params(labelsize="x-large")
 plt.show()
 
 plt.plot(photocount, average_y)
-plt.xlabel("学習データ数（枚）", fontname="MS Gothic")
-plt.ylabel("誤差(%)", fontname="MS Gothic")
-plt.title("y座標", fontname="MS Gothic")
+plt.xlabel("学習データ数（枚）", fontname="MS Gothic", fontsize="xx-large")
+plt.ylabel("誤差(%)", fontname="MS Gothic", fontsize="xx-large")
+plt.title("y座標", fontname="MS Gothic", fontsize="xx-large")
+plt.tick_params(labelsize="x-large")
 plt.show()
